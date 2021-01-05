@@ -824,6 +824,32 @@ xcb_xim_trigger_key_type_t xcb_xim_check_trigger_key(xcb_xim_t *im,
     return XCB_XIM_IS_NOT_TRIGGER;
 }
 
+bool xcb_xim_check_trigger_on_key(xcb_xim_t *im, xcb_keysym_t keysym,
+                                  uint32_t modifier, uint32_t *idx) {
+    for (uint32_t i = 0; i < im->onKeys.nKeys; i++) {
+        if (im->onKeys.keys[i].keysym == keysym &&
+            (modifier & im->onKeys.keys[i].modifier_mask) ==
+                im->onKeys.keys[i].modifier) {
+            *idx = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool xcb_xim_check_trigger_off_key(xcb_xim_t *im, xcb_keysym_t keysym,
+                                   uint32_t modifier, uint32_t *idx) {
+    for (uint32_t i = 0; i < im->offKeys.nKeys; i++) {
+        if (im->offKeys.keys[i].keysym == keysym &&
+            (modifier & im->offKeys.keys[i].modifier_mask) ==
+                im->offKeys.keys[i].modifier) {
+            *idx = i;
+            return XCB_XIM_TRIGGER_OFF_KEY;
+        }
+    }
+    return false;
+}
+
 void xcb_xim_destroy(xcb_xim_t *im) {
     free(im->server_name);
     free(im);
@@ -1017,7 +1043,9 @@ void _xcb_xim_process_queue(xcb_xim_t *im) {
             list_container_of((im->queue).next, xcb_xim_request_queue_t, list);
         list_remove(&request->list);
         if (_xcb_xim_send_request_frame(im, request)) {
-            im->current = request;
+            if (request->major_code != XCB_XIM_FORWARD_EVENT) {
+                im->current = request;
+            }
         } else {
             _xcb_xim_process_fail_callback(im, request);
             _xcb_xim_request_free(request);

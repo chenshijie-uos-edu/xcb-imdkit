@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.8)
-project(xcb-imdkit VERSION 0.1.0)
+project(xcb-imdkit VERSION 1.0.2)
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 option(USE_SYSTEM_UTHASH "Enable system utash" On)
 
+include(GenerateExportHeader)
 include(CheckFunctionExists)
 include(CMakePackageConfigHelpers)
 include(ECMSetupVersion)
