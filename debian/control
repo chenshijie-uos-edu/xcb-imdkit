@@ -6,7 +6,7 @@ Uploaders:
  Boyuan Yang <byang@debian.org>,
 Build-Depends:
  cmake,
- debhelper-compat (= 13),
+ debhelper-compat (= 12),
  extra-cmake-modules,
  libxcb-keysyms1-dev,
  libxcb-util0-dev,
@@ -39,7 +39,7 @@ Description: XIM protocol implementation in XCB (development files)
  .
  This package provides development files of xcb-imdkit.
 
-Package: libxcb-imdkit0
+Package: libxcb-imdkit1
 Architecture: any
 Multi-Arch: same
 Depends:
